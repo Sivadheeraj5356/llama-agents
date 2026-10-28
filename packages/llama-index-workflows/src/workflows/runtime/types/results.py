@@ -414,9 +414,10 @@ class AddWaiter(BaseModel, Generic[EventType]):
     @classmethod
     def _validate(cls, data: Any, handler: Any) -> AddWaiter:
         if isinstance(data, dict):
-            # Strip has_requirements before validation (it's computed)
+            # Keep has_requirements: requirements serialize as {}, so the flag
+            # is the only record that the waiter had requirements (needed to
+            # re-ping the step on restore).
             data = dict(data)
-            data.pop("has_requirements", None)
         return handler(data)
 
 
